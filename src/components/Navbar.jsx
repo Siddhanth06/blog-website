@@ -1,15 +1,16 @@
 import { useState } from 'react';
-import Image from './Image';
+import Image from '../components/Image';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   return (
     <div className='w-full h-16 md:h-20 flex items-center justify-between'>
       {/* logo */}
-      <div className='flex items-center gap-4 text-2xl font-bold'>
+      <Link to='/' className='flex items-center gap-4 text-2xl font-bold'>
         <Image src='logo.png' w={32} h={32} alt='logo image' />
         <span>Siddhanth</span>
-      </div>
+      </Link>
       {/* mobile menu */}
       <div className='md:hidden'>
         {/* mobile menu button */}
@@ -25,28 +26,28 @@ const Navbar = () => {
             open ? '-right-[0%]' : '-right-[100%]'
           }`}
         >
-          <a href='/'>Home</a>
-          <a href='/'>Trending</a>
-          <a href='/'>Popular</a>
-          <a href='/'>About</a>
-          <a href='/'>
+          <Link to='/home'>Home</Link>
+          <Link to='/trending'>Trending</Link>
+          <Link to='/popular'>Popular</Link>
+          <Link to='/about'>About</Link>
+          <Link to='/login'>
             <button className='px-4 py-2 bg-blue-800 rounded-3xl text-white'>
               Login 👋
             </button>
-          </a>
+          </Link>
         </div>
       </div>
       {/* desktop menu */}
       <div className='hidden md:flex items-center gap-8 xl:gap-12 font-medium'>
-        <a href='/'>Home</a>
-        <a href='/'>Trending</a>
-        <a href='/'>Popular</a>
-        <a href='/'>About</a>
-        <a href='/'>
+        <Link to='/home'>Home</Link>
+        <Link to='/trending'>Trending</Link>
+        <Link to='/popular'>Popular</Link>
+        <Link to='/about'>About</Link>
+        <Link to='/login'>
           <button className='px-4 py-2 bg-blue-800 rounded-3xl text-white'>
             Login 👋
           </button>
-        </a>
+        </Link>
       </div>
     </div>
   );
