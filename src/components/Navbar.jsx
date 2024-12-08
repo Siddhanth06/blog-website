@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import Image from '../components/Image';
 import { Link } from 'react-router-dom';
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-} from '@clerk/clerk-react';
+import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -28,7 +23,7 @@ const Navbar = () => {
         </div>
         {/* Mobile menu list */}
         <div
-          className={`h-screen w-full flex flex-col text-lg gap-8 font-medium justify-center items-center absolute top-16 bg-[#e6e6ff] transition-all ease-in-out ${
+          className={`h-screen w-full flex flex-col text-lg gap-8 font-medium justify-center items-center fixed top-16 bg-[#e6e6ff] transition-all ease-in-out ${
             open ? '-right-[0%]' : '-right-[100%]'
           }`}
         >
