@@ -68,7 +68,7 @@ const Homepage = () => {
       {/* featured posts */}
       <FeaturedPosts />
       {/* posts lists */}
-      <h1>Recent Posts</h1>
+      <h1 className='text-gray-800 font-medium text-2xl mt-4'>Recent Posts</h1>
       <PostsList />
     </div>
   );

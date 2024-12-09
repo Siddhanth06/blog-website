@@ -5,10 +5,10 @@ const FeaturedPosts = () => {
     <>
       <div className='flex flex-col md:flex-row md:gap-8'>
         {/* main blog */}
-        <div className=' flex flex-col gap-4 lg:w-1/2'>
+        <div className=' flex flex-col gap-4 md:w-1/2'>
           {/* image */}
           <div className='rounded-lg overflow-hidden'>
-            <Image src='/featured4.jpeg' />
+            <Image src='/featured4.jpeg' w="735"/>
           </div>
           {/* tags */}
           <div className='flex gap-4'>
@@ -24,7 +24,7 @@ const FeaturedPosts = () => {
           </div>
         </div>
         {/* other blogs */}
-        <div className='mt-4 flex flex-col gap-4 lg:gap-10 lg:w-1/2'>
+        <div className='mt-4 lg:h-1/3 flex flex-col gap-4 lg:gap-10 md:w-1/2'>
           <div className='flex gap-4 items-start md:items-start text-[12px] md:text-base'>
             {/* image */}
             <div className='flex-[0.3] rounded-2xl overflow-hidden'>
@@ -45,10 +45,10 @@ const FeaturedPosts = () => {
               </div>
             </div>
           </div>
-          <div className='flex gap-4 items-center text-[12px] md:text-base'>
+          <div className='flex gap-4 items-start md:items-start text-[12px] md:text-base'>
             {/* image */}
             <div className='flex-[0.3] rounded-2xl overflow-hidden'>
-              <Image src='/featured4.jpeg' className='object-contain' />
+              <Image src='/featured4.jpeg' className='object-contain' w='298'/>
             </div>
             {/* content */}
             <div className='flex flex-1 flex-col gap-2'>
@@ -65,10 +65,10 @@ const FeaturedPosts = () => {
               </div>
             </div>
           </div>
-          <div className='flex gap-4 items-center text-[12px] md:text-base'>
+          <div className='flex gap-4 items-start md:items-start text-[12px] md:text-base'>
             {/* image */}
             <div className='flex-[0.3] rounded-2xl overflow-hidden'>
-              <Image src='/featured4.jpeg' className='object-contain' />
+              <Image src='/featured4.jpeg' className='object-contain' w='298'/>
             </div>
             {/* content */}
             <div className='flex flex-1 flex-col gap-2'>
@@ -85,6 +85,7 @@ const FeaturedPosts = () => {
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </>
