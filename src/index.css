@@ -6,5 +6,17 @@ body {
   width: 100vw;
   overflow-x: hidden;
   background-color: #e6e6ff;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
+}
+
+.ql-editor {
+  border: none !important;
+}
+
+.ql-container {
+  border: none !important;
+}
+
+.ql-tooltip {
+  border: none !important;
 }
