@@ -3,6 +3,8 @@ import "dotenv/config";
 import userRouter from "./routes/user.route.js";
 import commentRouter from "./routes/comment.route.js";
 import postRouter from "./routes/comment.route.js";
+import connectDB from "./lib/connectDB.js";
+connectDB();
 
 const app = express();
 
