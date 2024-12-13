@@ -2,21 +2,18 @@ import Post from "../models/post.model.js";
 
 // Get all posts
 export const getPosts = async (req, res) => {
-  console.log(req.params);
   const posts = await Post.find();
   res.status(200).json(posts);
 };
 
 //Get a single post
 export const getPost = async (req, res) => {
-  console.log(req.params.slug);
   const post = await Post.findOne({ slug: req.params.slug });
   res.status(200).json(post);
 };
 
 //Create a new post
 export const createPost = async (req, res) => {
-  console.log(req.body);
   const newPost = new Post(req.body);
   const post = await newPost.save();
   res.status(200).json(post);
