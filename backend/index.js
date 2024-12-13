@@ -7,6 +7,7 @@ import connectDB from "./lib/connectDB.js";
 connectDB();
 
 const app = express();
+app.use(express.json());
 
 app.use("/users", userRouter);
 app.use("/comments", commentRouter);
