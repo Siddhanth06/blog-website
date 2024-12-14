@@ -6,10 +6,12 @@ import postRouter from './routes/post.route.js';
 import webHookRouter from './routes/webhook.route.js';
 import { clerkClient, clerkMiddleware, requireAuth } from '@clerk/express';
 import connectDB from './lib/connectDB.js';
+import cors from 'cors';
 
 connectDB();
 
 const app = express();
+app.use(cors(process.env.CLIENT_URL));
 app.use('/webhooks', webHookRouter);
 
 app.use(express.json());
