@@ -1,8 +1,13 @@
-import { Schema } from "mongoose";
-import mongoose from "mongoose";
+import { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
 const userSchema = new Schema(
   {
+    clerkUserId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     username: {
       type: String,
       required: true,
@@ -24,4 +29,4 @@ const userSchema = new Schema(
   { timestammps: true }
 );
 
-export default mongoose.model("User", userSchema);
+export default mongoose.model('User', userSchema);
