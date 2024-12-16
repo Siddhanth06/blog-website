@@ -1,5 +1,12 @@
-import Post from '../models/post.model.js';
-import User from '../models/user.model.js';
+import Post from "../models/post.model.js";
+import User from "../models/user.model.js";
+import ImageKit from "imagekit";
+
+const imagekit = new ImageKit({
+  urlEndpoint: process.env.IK_URL_ENDPOINT,
+  publicKey: process.env.IK_PUBLIC_KEY,
+  privateKey: process.env.IK_PRIVATE_KEY,
+});
 
 // Get all posts
 export const getPosts = async (req, res, next) => {
@@ -28,16 +35,16 @@ export const createPost = async (req, res, next) => {
     console.log(req.auth.userId);
 
     if (!clerkUserId) {
-      res.status(401).json('not authenticated');
+      res.status(401).json("not authenticated");
     }
 
     const user = await User.findOne({ clerkUserId });
 
     if (!user) {
-      res.status(404).json('user not found');
+      res.status(404).json("user not found");
     }
 
-    let slug = req.body.title.replace('/ /g', '-').toLowerCase();
+    let slug = req.body.title.replace("/ /g", "-").toLowerCase();
 
     let existingPost = await Post.findOne({ slug });
 
@@ -64,7 +71,7 @@ export const deletePost = async (req, res, next) => {
     console.log(req.auth.userId);
 
     if (!clerkUserId) {
-      res.status(401).json('not authenticated');
+      res.status(401).json("not authenticated");
     }
 
     const user = await User.findOne({ clerkUserId });
@@ -75,11 +82,16 @@ export const deletePost = async (req, res, next) => {
     });
 
     if (!deletedPost) {
-      return res.status(404).json({ message: 'Post not found' });
+      return res.status(404).json({ message: "Post not found" });
     }
 
-    res.status(200).json({ message: 'Post deleted successfully', deletedPost });
+    res.status(200).json({ message: "Post deleted successfully", deletedPost });
   } catch (error) {
     next(error);
   }
+};
+
+export const uploadAuth = async (req, res) => {
+  var result = imagekit.getAuthenticationParameters();
+  res.send(result);
 };

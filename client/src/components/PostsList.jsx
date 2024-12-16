@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-import PostsListItem from './PostsListItem';
-import axios from 'axios';
+import { useQuery } from "@tanstack/react-query";
+import PostsListItem from "./PostsListItem";
+import axios from "axios";
 
 const PostsList = () => {
   const fetchPosts = async () => {
@@ -9,15 +9,15 @@ const PostsList = () => {
   };
 
   const { isPending, error, data } = useQuery({
-    queryKey: ['repoData'],
+    queryKey: ["repoData"],
     queryFn: () => fetchPosts(),
   });
 
   console.log(data);
 
-  if (isPending) return 'Loading...';
+  if (isPending) return "Loading...";
 
-  if (error) return 'An error has occurred: ' + error.message;
+  if (error) return "An error has occurred: " + error.message;
   return (
     <>
       {data.map((index, item) => {
