@@ -1,7 +1,16 @@
 import express from "express";
-import { createPost, deletePost, getPost, getPosts } from "../controllers/post.controller.js";
+import {
+  createPost,
+  deletePost,
+  getPost,
+  getPosts,
+  uploadAuth,
+} from "../controllers/post.controller.js";
 
 const router = express.Router();
+
+//Image upload authentication
+router.get("/upload-auth", uploadAuth);
 
 //Get All Posts
 router.get("/", getPosts);
