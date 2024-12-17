@@ -35,6 +35,8 @@ export const createPost = async (req, res, next) => {
     console.log(req.auth.userId);
 
     if (!clerkUserId) {
+      console.log("Clerk id", clerkUserId);
+
       res.status(401).json("not authenticated");
     }
 
@@ -44,7 +46,8 @@ export const createPost = async (req, res, next) => {
       res.status(404).json("user not found");
     }
 
-    let slug = req.body.title.replace("/ /g", "-").toLowerCase();
+    // let slug = req.body.title.replace("/ /g", "-").toLowerCase();
+    let slug = req.body.title.replace(/\s+/g, "-").toLowerCase();
 
     let existingPost = await Post.findOne({ slug });
 

@@ -5,7 +5,7 @@ const Comment = () => {
   return (
     <div className='flex flex-col gap-4 lg:w-3/5'>
       <div className='flex items-center gap-4'>
-        <Image src='featured4.jpeg' w='40' h='40' className='rounded-full' />
+        <Image src='/featured4.jpeg' w='40' h='40' className='rounded-full' />
         <h1>John Doe</h1>
         <p>2 days ago</p>
       </div>
