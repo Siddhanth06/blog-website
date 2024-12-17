@@ -10,8 +10,14 @@ const imagekit = new ImageKit({
 
 // Get all posts
 export const getPosts = async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+
   try {
-    const posts = await Post.find();
+    const posts = await Post.find()
+      .limit(limit)
+      .skip((page - 1) * limit);
+
     res.status(200).json(posts);
   } catch (error) {
     next(error);
@@ -35,8 +41,6 @@ export const createPost = async (req, res, next) => {
     console.log(req.auth.userId);
 
     if (!clerkUserId) {
-      console.log("Clerk id", clerkUserId);
-
       res.status(401).json("not authenticated");
     }
 
@@ -46,7 +50,6 @@ export const createPost = async (req, res, next) => {
       res.status(404).json("user not found");
     }
 
-    // let slug = req.body.title.replace("/ /g", "-").toLowerCase();
     let slug = req.body.title.replace(/\s+/g, "-").toLowerCase();
 
     let existingPost = await Post.findOne({ slug });

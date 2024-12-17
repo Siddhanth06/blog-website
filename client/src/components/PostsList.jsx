@@ -3,21 +3,24 @@ import PostsListItem from "./PostsListItem";
 import axios from "axios";
 
 const PostsList = () => {
-  const fetchPosts = async () => {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`);
+  const fetchPosts = async (pageParam) => {
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
+      params: { page: pageParam },
+    });
     return res.data;
   };
 
-  const { isPending, error, data } = useQuery({
-    queryKey: ["repoData"],
-    queryFn: () => fetchPosts(),
-  });
+  const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status } =
+    useInfiniteQuery({
+      queryKey: ["posts"],
+      queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam),
+      initialPageParam: 0,
+      getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    });
 
-  console.log(data);
+  if (isFetching) return "Loading...";
 
-  if (isPending) return "Loading...";
-
-  if (error) return "An error has occurred: " + error.message;
+  if (status === "error") return "Something went wrong";
   return (
     <>
       {data.map((index, item) => {
