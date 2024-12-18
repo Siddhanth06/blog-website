@@ -1,11 +1,11 @@
-import { Schema } from 'mongoose';
-import mongoose from 'mongoose';
+import { Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const postSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     img: {
@@ -22,7 +22,7 @@ const postSchema = new Schema(
     },
     category: {
       type: String,
-      default: 'General',
+      default: "General",
     },
     desc: {
       type: String,
@@ -40,7 +40,7 @@ const postSchema = new Schema(
       default: 0,
     },
   },
-  { timestammps: true }
+  { timestamps: true }
 );
 
-export default mongoose.model('Post', postSchema);
+export default mongoose.model("Post", postSchema);

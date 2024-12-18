@@ -12,13 +12,17 @@ const imagekit = new ImageKit({
 export const getPosts = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
+  console.log(req.query.page);
 
   try {
     const posts = await Post.find()
+      .populate("user", "username")
       .limit(limit)
       .skip((page - 1) * limit);
 
-    res.status(200).json(posts);
+    const totalPosts = await Post.countDocuments();
+    const hasMore = page * limit < totalPosts;
+    res.status(200).json({ posts, hasMore });
   } catch (error) {
     next(error);
   }

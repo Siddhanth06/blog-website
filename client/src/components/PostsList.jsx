@@ -1,11 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import PostsListItem from "./PostsListItem";
 import axios from "axios";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const PostsList = () => {
   const fetchPosts = async (pageParam) => {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
-      params: { page: pageParam },
+      params: { page: pageParam, limit: 2 },
     });
     return res.data;
   };
@@ -14,18 +15,34 @@ const PostsList = () => {
     useInfiniteQuery({
       queryKey: ["posts"],
       queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam),
-      initialPageParam: 0,
-      getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, pages) => (lastPage.hasMore ? pages.length + 1 : undefined),
     });
+
+  const allPosts = data?.pages?.flatMap((page) => page.posts) || [];
+
+  console.log(allPosts);
 
   if (isFetching) return "Loading...";
 
   if (status === "error") return "Something went wrong";
   return (
     <>
-      {data.map((index, item) => {
-        return <PostsListItem key={item._id} data={item} />;
-      })}
+      <InfiniteScroll
+        dataLength={allPosts.length} //This is important field to render the next data
+        next={fetchNextPage}
+        hasMore={!!hasNextPage}
+        loader={<h4>Loading more posts...</h4>}
+        endMessage={
+          <p>
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+      >
+        {allPosts.map((post) => {
+          return <PostsListItem key={post._id} post={post} />;
+        })}
+      </InfiniteScroll>
     </>
   );
 };
