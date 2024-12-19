@@ -1,15 +1,15 @@
-import { Link } from 'react-router-dom';
-import Image from '../components/Image';
-import Search from '../components/Search';
-import Comments from '../components/Comments';
-import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { Link } from "react-router-dom";
+import Image from "../components/Image";
+import Search from "../components/Search";
+import Comments from "../components/Comments";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 // Function to fetch a single post by ID
 const fetchPost = async (slug) => {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/posts/${slug}`);
   if (!response.ok) {
-    throw new Error('Failed to fetch post');
+    throw new Error("Failed to fetch post");
   }
   return response.json();
 };
@@ -19,7 +19,7 @@ const SinglePostPage = () => {
 
   // Use useQuery to fetch the post by ID
   const { data, error, isLoading, isError } = useQuery({
-    queryKey: ['post', slug],
+    queryKey: ["post", slug],
     queryFn: () => fetchPost(slug),
     enabled: !!slug,
   });
@@ -29,7 +29,10 @@ const SinglePostPage = () => {
   if (isError) return <div>Error: {error.message}</div>;
   if (!data) return <div>Post not found</div>;
 
-  console.log('single post data', data);
+  const postId = data._id;
+  console.log(postId);
+
+  // console.log('single post data', data);
 
   return (
     <div className='flex flex-col gap-4'>
@@ -39,9 +42,7 @@ const SinglePostPage = () => {
           {/* content */}
           {/* title */}
           <div>
-            <h1 className='font-bold text-lg md:text-xl lg:text-3xl'>
-              {data.title}
-            </h1>
+            <h1 className='font-bold text-lg md:text-xl lg:text-3xl'>{data.title}</h1>
           </div>
           {/* tags */}
           <div className='flex gap-2 text-xs'>
@@ -63,22 +64,14 @@ const SinglePostPage = () => {
       </div>
       {/* content */}
       <div className='flex flex-col md:flex-row md:gap-16 md:justify-between'>
-        <div
-          className='md:flex-1'
-          dangerouslySetInnerHTML={{ __html: data.content }}
-        ></div>
+        <div className='md:flex-1' dangerouslySetInnerHTML={{ __html: data.content }}></div>
         <div className='md:flex-[0.25] md:flex md:flex-col md:gap-4 sticky top-8'>
           <div className='flex flex-col gap-4'>
             <h1 className='font-medium'>Author</h1>
             <div className='flex flex-col gap-2'>
               <div className='flex items-center gap-4'>
                 {/* <p>{data.user.img}</p> */}
-                <img
-                  src={data.user.img}
-                  alt=''
-                  width='40'
-                  className='rounded-full'
-                />
+                <img src={data.user.img} alt='' width='40' className='rounded-full' />
                 <span>{data?.user?.username}</span>
               </div>
               <p className='text-sm'>Lorem ipsum dolor sit amet conse</p>
@@ -135,7 +128,7 @@ const SinglePostPage = () => {
         </div>
       </div>
       {/* comments */}
-      <Comments />
+      <Comments postId={postId} />
     </div>
   );
 };
