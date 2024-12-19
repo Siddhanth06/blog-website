@@ -2,8 +2,34 @@ import { Link } from "react-router-dom";
 import Image from "../components/Image";
 import Search from "../components/Search";
 import Comments from "../components/Comments";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+
+// Function to fetch a single post by ID
+const fetchPost = async (slug) => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/posts/${slug}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch post");
+  }
+  return response.json();
+};
 
 const SinglePostPage = () => {
+  const { slug } = useParams();
+
+  // Use useQuery to fetch the post by ID
+  const { data, error, isLoading, isError } = useQuery({
+    queryKey: ["post", slug],
+    queryFn: () => fetchPost(slug),
+    enabled: !!slug,
+  });
+
+  // Handle loading, error, and success states
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error: {error.message}</div>;
+
+  console.log("single post data", data);
+
   return (
     <div className='flex flex-col gap-4'>
       {/* detail */}
@@ -12,24 +38,19 @@ const SinglePostPage = () => {
           {/* content */}
           {/* title */}
           <div>
-            <h1 className='font-bold text-lg md:text-xl lg:text-3xl'>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Numquam, itaque!
-            </h1>
+            <h1 className='font-bold text-lg md:text-xl lg:text-3xl'>{data.title}</h1>
           </div>
           {/* tags */}
           <div className='flex gap-2 text-xs'>
             <span className='text-gray-500'>Written by</span>
-            <span className='text-blue-900'>John Doe</span>
+            <span className='text-blue-900'>{data.user.username}</span>
             <span>on</span>
-            <span className='text-blue-900'>Web Design</span>
+            <span className='text-blue-900'>{data.category}</span>
             <span className='text-gray-500'>2 days ago</span>
           </div>
           {/* description */}
           <div>
-            <p className='text-sm text-gray-600'>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolore quidem nisi quod quo
-              unde veniam cumque sed nihil incidunt! Veniam.
-            </p>
+            <p className='text-sm text-gray-600'>{data.desc}</p>
           </div>
         </div>
         {/* image */}
@@ -39,54 +60,15 @@ const SinglePostPage = () => {
       </div>
       {/* content */}
       <div className='flex flex-col md:flex-row md:gap-16 md:justify-between'>
-        <div className='md:flex-1'>
-          <p className='text-justify mb-4'>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid tempora, quam
-            reiciendis perspiciatis quo illum eligendi quibusdam aperiam natus ratione maxime nulla.
-            Adipisci nostrum at numquam iste dignissimos porro voluptatum exercitationem, nemo vel
-            magni vitae doloribus. Deleniti iure, sit laudantium provident eveniet hic numquam fugit
-            exercitationem, vel et minus vero. Lorem ipsum dolor sit, amet consectetur adipisicing
-            elit. Similique unde ut quas rem magni dicta reiciendis nulla accusantium, error
-            dignissimos saepe, asperiores ipsa vitae earum laboriosam maiores quod voluptas nisi
-            perspiciatis dolores! Suscipit fugiat ducimus delectus aspernatur libero! Quasi nihil
-            quis voluptatem cum delectus alias quisquam a molestiae, repudiandae dolor. Lorem ipsum
-            dolor sit amet consectetur adipisicing elit. Vitae numquam cupiditate recusandae
-            molestias obcaecati iusto quia possimus, facilis, sint aspernatur soluta debitis dolor
-            id mollitia voluptatum accusamus eius neque qui. Dolores hic ex voluptate saepe quos,
-            nulla impedit illum reiciendis, eos accusamus aut numquam ratione, in aliquid optio ipsa
-            dolorum?
-          </p>
-          <p className='text-justify mb-4'>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid tempora, quam
-            reiciendis perspiciatis quo illum eligendi quibusdam aperiam natus ratione maxime nulla.
-            Adipisci nostrum at numquam iste dignissimos porro voluptatum exercitationem, nemo vel
-            magni vitae doloribus. Deleniti iure, sit laudantium provident eveniet hic numquam fugit
-            exercitationem, vel et minus vero. Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Perferendis quia atque corporis non soluta veniam magni, placeat culpa! Quam quasi
-            ipsa accusantium harum natus ullam, nam officiis. Ratione, beatae velit? Expedita et
-            nostrum totam placeat? Minima ut possimus aspernatur soluta hic debitis, vel
-            consequuntur sed culpa, inventore iure at earum.
-          </p>
-          <p className='text-justify'>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid tempora, quam
-            reiciendis perspiciatis quo illum eligendi quibusdam aperiam natus ratione maxime nulla.
-            Adipisci nostrum at numquam iste dignissimos porro voluptatum exercitationem, nemo vel
-            magni vitae doloribus. Deleniti iure, sit laudantium provident eveniet hic numquam fugit
-            exercitationem, vel et minus vero. Lorem ipsum dolor sit amet consectetur adipisicing
-            elit. Nostrum, iusto expedita voluptas quidem cum laboriosam quod consectetur libero rem
-            perferendis voluptatum! Aut incidunt consequatur necessitatibus ea placeat maxime iste
-            quibusdam numquam tempore, beatae pariatur culpa assumenda repudiandae, perferendis
-            totam omnis eius nulla accusantium laboriosam laborum animi! Repellendus quo distinctio
-            sint?
-          </p>
-        </div>
+        <div className='md:flex-1' dangerouslySetInnerHTML={{ __html: data.content }}></div>
         <div className='md:flex-[0.25] md:flex md:flex-col md:gap-4 sticky top-8'>
           <div className='flex flex-col gap-4'>
             <h1 className='font-medium'>Author</h1>
             <div className='flex flex-col gap-2'>
               <div className='flex items-center gap-4'>
-                <Image src='/featured4.jpeg' w='40' h='40' className='rounded-full' />
-                <span>John Doe</span>
+                {/* <p>{data.user.img}</p> */}
+                <img src={data.user.img} alt='' width='40' className='rounded-full' />
+                <span>{data?.user?.username}</span>
               </div>
               <p className='text-sm'>Lorem ipsum dolor sit amet conse</p>
               <div className='flex gap-2'>

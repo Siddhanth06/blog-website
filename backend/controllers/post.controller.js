@@ -10,9 +10,19 @@ const imagekit = new ImageKit({
 
 // Get all posts
 export const getPosts = async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  console.log(req.query.page);
+
   try {
-    const posts = await Post.find();
-    res.status(200).json(posts);
+    const posts = await Post.find()
+      .populate("user", "username")
+      .limit(limit)
+      .skip((page - 1) * limit);
+
+    const totalPosts = await Post.countDocuments();
+    const hasMore = page * limit < totalPosts;
+    res.status(200).json({ posts, hasMore });
   } catch (error) {
     next(error);
   }
@@ -21,7 +31,10 @@ export const getPosts = async (req, res, next) => {
 //Get a single post
 export const getPost = async (req, res, next) => {
   try {
-    const post = await Post.findOne({ slug: req.params.slug });
+    const post = await Post.findOne({ slug: req.params.slug }).populate("user", [
+      "username",
+      "img",
+    ]);
     res.status(200).json(post);
   } catch (error) {
     next(error);
@@ -35,8 +48,6 @@ export const createPost = async (req, res, next) => {
     console.log(req.auth.userId);
 
     if (!clerkUserId) {
-      console.log("Clerk id", clerkUserId);
-
       res.status(401).json("not authenticated");
     }
 
@@ -46,7 +57,6 @@ export const createPost = async (req, res, next) => {
       res.status(404).json("user not found");
     }
 
-    // let slug = req.body.title.replace("/ /g", "-").toLowerCase();
     let slug = req.body.title.replace(/\s+/g, "-").toLowerCase();
 
     let existingPost = await Post.findOne({ slug });
