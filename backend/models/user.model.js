@@ -26,7 +26,7 @@ const userSchema = new Schema(
       default: [],
     },
   },
-  { timestammps: true }
+  { timestamps: true }
 );
 
 export default mongoose.model('User', userSchema);

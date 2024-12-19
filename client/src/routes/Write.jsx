@@ -1,26 +1,27 @@
-import "react-quill-new/dist/quill.snow.css";
-import ReactQuill from "react-quill-new";
-import { useAuth, useUser } from "@clerk/clerk-react";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Upload from "../components/Upload.jsx";
-import { useNavigate } from "react-router-dom";
+import 'react-quill-new/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import { useAuth, useUser } from '@clerk/clerk-react';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import Upload from '../components/Upload.jsx';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Write = () => {
   const { isLoaded, isSignedIn } = useUser();
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   const { getToken } = useAuth();
-  const [cover, setCover] = useState("");
+  const [cover, setCover] = useState('');
   const [progress, setProgress] = useState(0);
-  const [img, setImg] = useState("");
-  const [video, setVideo] = useState("");
+  const [img, setImg] = useState('');
+  const [video, setVideo] = useState('');
   const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: async (newPost) => {
       const token = await getToken();
-      console.log("token", token);
+      console.log('token', token);
 
       return axios.post(`${import.meta.env.VITE_API_URL}/posts`, newPost, {
         headers: {
@@ -30,7 +31,7 @@ const Write = () => {
     },
     onSuccess: (res) => {
       navigate(`/${res.data.slug}`);
-      toast("Post created successfully!");
+      toast('Post created successfully!');
     },
   });
 
@@ -39,10 +40,10 @@ const Write = () => {
     const formData = new FormData(e.target);
 
     const data = {
-      img: cover.filePath || "",
-      title: formData.get("title"),
-      desc: formData.get("desc"),
-      category: formData.get("category"),
+      img: cover.filePath || '',
+      title: formData.get('title'),
+      desc: formData.get('desc'),
+      category: formData.get('category'),
       content: value,
     };
 
@@ -60,7 +61,9 @@ const Write = () => {
   useEffect(() => {
     if (video) {
       // Properly set the value with the interpolated image URL
-      setValue((prev) => prev + `<p><iframe class="ql-video" src="${video.url}" /></p>`);
+      setValue(
+        (prev) => prev + `<p><iframe class="ql-video" src="${video.url}" /></p>`
+      );
     }
   }, [video]);
 
@@ -74,9 +77,15 @@ const Write = () => {
   return (
     <div className='h-[calc(100vh-64px)] md:h-[calc(100vh-80px)] flex flex-col gap-6'>
       <h1>Create a new post</h1>
-      <form onSubmit={handleSubmit} action='' className='flex flex-col flex-1 gap-6'>
+      <form
+        onSubmit={handleSubmit}
+        action=''
+        className='flex flex-col flex-1 gap-6'
+      >
         <Upload type='image' setData={setCover} setProgress={setProgress}>
-          <button className='bg-white w-max p-2 rounded-lg text-gray-800'>Add a cover image</button>
+          <button className='bg-white w-max p-2 rounded-lg text-gray-800'>
+            Add a cover image
+          </button>
         </Upload>
         <input
           type='text'
@@ -125,7 +134,7 @@ const Write = () => {
         >
           Send
         </button>
-        {"Progress:" + progress}
+        {'Progress:' + progress}
         {mutation.isError && <span>{mutation.error.message}</span>}
       </form>
     </div>
