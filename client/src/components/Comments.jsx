@@ -1,6 +1,6 @@
 import Comment from "./Comment";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -11,11 +11,13 @@ const fetchComments = async (postId) => {
 };
 
 const Comments = ({ postId }) => {
+  const { user } = useUser();
+
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
 
   // Use useQuery to fetch the comments by postId
-  const { data, error, isLoading, isError } = useQuery({
+  const { data, error, isLoading, isError, isPending } = useQuery({
     queryKey: ["comments", postId],
     queryFn: () => fetchComments(postId),
     enabled: !!postId, // Ensure the query is enabled only when postId exists
@@ -58,16 +60,20 @@ const Comments = ({ postId }) => {
   };
 
   // Handle loading, error, and success states
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error: {error.message}</div>;
+  // if (isLoading) return <div>Loading...</div>;
+  // if (isError) return <div>Error: {error.message}</div>;
 
   return (
     <>
-      <div className='flex flex-col gap-8'>
+      <div className='flex flex-col gap-8 mb-12'>
         <div>
           <h1 className='text-gray-500 text-2xl'>Comments</h1>
           <div className='flex items-center justify-between gap-8 lg:w-3/5'>
-            <form action='' onSubmit={handleSubmit}>
+            <form
+              action=''
+              onSubmit={handleSubmit}
+              className='flex items-center justify-between gap-8 w-full '
+            >
               <textarea
                 name='desc'
                 className='w-full rounded-lg py-2 px-4 mt-4'
@@ -80,9 +86,33 @@ const Comments = ({ postId }) => {
           </div>
         </div>
         {/* Render Comments */}
-        {data?.map((comment) => (
+        {/* {data?.map((comment) => (
           <Comment key={comment._id} comment={comment} />
-        ))}
+        ))} */}
+        {isPending ? (
+          "Loading..."
+        ) : error ? (
+          "Error loading comments!"
+        ) : (
+          <>
+            {mutation.isPending && (
+              <Comment
+                comment={{
+                  desc: `${mutation.variables.desc} (Sending...)`,
+                  createdAt: new Date(),
+                  user: {
+                    img: user.imageUrl,
+                    username: user.username,
+                  },
+                }}
+              />
+            )}
+
+            {data.map((comment) => {
+              return <Comment key={comment._id} comment={comment} />;
+            })}
+          </>
+        )}
       </div>
     </>
   );

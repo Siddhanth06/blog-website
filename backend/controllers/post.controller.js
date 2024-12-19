@@ -81,7 +81,6 @@ export const createPost = async (req, res, next) => {
 export const deletePost = async (req, res, next) => {
   try {
     const clerkUserId = req.auth.userId;
-    console.log(req.auth.userId);
 
     if (!clerkUserId) {
       res.status(401).json("not authenticated");
