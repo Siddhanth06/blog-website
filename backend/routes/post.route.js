@@ -15,13 +15,13 @@ router.get("/upload-auth", uploadAuth);
 //Get All Posts
 router.get("/", getPosts);
 
+//Delete post
+router.delete("/:id", deletePost);
+
 //Get Single Post
 router.get("/:slug", getPost);
 
 //Create new post
 router.post("/", createPost);
-
-//Delete post
-router.delete("/:id", deletePost);
 
 export default router;
