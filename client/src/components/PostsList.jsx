@@ -21,8 +21,6 @@ const PostsList = () => {
 
   const allPosts = data?.pages?.flatMap((page) => page.posts) || [];
 
-  console.log(allPosts);
-
   if (isFetching) return "Loading...";
 
   if (status === "error") return "Something went wrong";
