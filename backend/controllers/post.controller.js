@@ -81,13 +81,20 @@ export const createPost = async (req, res, next) => {
 export const deletePost = async (req, res, next) => {
   try {
     const clerkUserId = req.auth.userId;
-    console.log(req.auth.userId);
 
     if (!clerkUserId) {
       res.status(401).json("not authenticated");
     }
 
+    const role = req.auth.sessionClaims?.metadata?.role || "user";
+
+    if (role === "admin") {
+      await Post.findByIdAndDelete(req.params.id);
+      return res.status(200).json("Post has been deleted");
+    }
+
     const user = await User.findOne({ clerkUserId });
+
     // Find and delete the post by slug
     const deletedPost = await Post.findOneAndDelete({
       _id: req.params.id,
@@ -100,6 +107,8 @@ export const deletePost = async (req, res, next) => {
 
     res.status(200).json({ message: "Post deleted successfully", deletedPost });
   } catch (error) {
+    // console.log("inside delete post");
+
     next(error);
   }
 };

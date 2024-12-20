@@ -1,16 +1,14 @@
-import { useEffect, useState } from 'react';
-import Image from '../components/Image';
-import { Link } from 'react-router-dom';
-import { SignedIn, SignedOut, useAuth, UserButton } from '@clerk/clerk-react';
+import { useEffect, useState } from "react";
+import Image from "../components/Image";
+import { Link } from "react-router-dom";
+import { SignedIn, SignedOut, useAuth, UserButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { getToken } = useAuth();
 
   useEffect(() => {
-    getToken().then((token) => {
-      console.log(token);
-    });
+    getToken().then((token) => {});
   }, []);
   return (
     <div className='w-full h-16 md:h-20 flex items-center justify-between'>
@@ -22,16 +20,13 @@ const Navbar = () => {
       {/* mobile menu */}
       <div className='md:hidden'>
         {/* mobile menu button */}
-        <div
-          onClick={() => setOpen((prev) => !prev)}
-          className='cursor-pointer text-2xl'
-        >
-          {open ? 'close' : 'open'}
+        <div onClick={() => setOpen((prev) => !prev)} className='cursor-pointer text-2xl'>
+          {open ? "close" : "open"}
         </div>
         {/* Mobile menu list */}
         <div
           className={`h-screen w-full flex flex-col text-lg gap-8 font-medium justify-center items-center fixed top-16 bg-[#e6e6ff] transition-all ease-in-out ${
-            open ? '-right-[0%]' : '-right-[100%]'
+            open ? "-right-[0%]" : "-right-[100%]"
           }`}
         >
           <Link to='/home'>Home</Link>
@@ -39,9 +34,7 @@ const Navbar = () => {
           <Link to='/popular'>Popular</Link>
           <Link to='/about'>About</Link>
           <Link to='/login'>
-            <button className='px-4 py-2 bg-blue-800 rounded-3xl text-white'>
-              Login 👋
-            </button>
+            <button className='px-4 py-2 bg-blue-800 rounded-3xl text-white'>Login 👋</button>
           </Link>
         </div>
       </div>
@@ -54,9 +47,7 @@ const Navbar = () => {
 
         <SignedOut>
           <Link to='/login'>
-            <button className='px-4 py-2 bg-blue-800 rounded-3xl text-white'>
-              Login 👋
-            </button>
+            <button className='px-4 py-2 bg-blue-800 rounded-3xl text-white'>Login 👋</button>
           </Link>
         </SignedOut>
         <SignedIn>

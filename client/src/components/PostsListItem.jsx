@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import { format } from "timeago.js";
 
 const PostsListItem = ({ post }) => {
-  console.log(post);
-
   return (
     <div className='flex flex-col gap-4 lg:flex-row mb-8'>
       {/* <div> */}
