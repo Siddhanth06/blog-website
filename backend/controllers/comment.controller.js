@@ -1,9 +1,9 @@
-import Comment from "../models/comment.model.js";
-import User from "../models/user.model.js";
+import Comment from '../models/comment.model.js';
+import User from '../models/user.model.js';
 
 export const getPostComments = async (req, res, next) => {
   const comment = await Comment.find({ post: req.params.postId })
-    .populate("user", "username img")
+    .populate('user', 'username img')
     .sort({ createdAt: -1 });
 
   res.json(comment);
@@ -14,7 +14,7 @@ export const addComment = async (req, res, next) => {
   const postId = req.params.postId;
 
   if (!clerkUserId) {
-    return res.status(401).json("Not Authenticated");
+    return res.status(401).json('Not Authenticated');
   }
 
   const user = await User.findOne({ clerkUserId });
@@ -32,17 +32,19 @@ export const addComment = async (req, res, next) => {
 
 export const deleteComment = async (req, res, next) => {
   const clerkUserId = req.auth.userId;
+  console.log(clerkUserId);
+
   const id = req.params.id;
 
   if (!clerkUserId) {
-    return res.status(401).json("Not Authenticated");
+    return res.status(401).json('Not Authenticated');
   }
 
-  const role = req.auth.sessionClaims?.metadata?.role || "user";
+  const role = req.auth.sessionClaims?.metadata?.role || 'user';
 
-  if (role === "admin") {
+  if (role === 'admin') {
     await Comment.findByIdAndDelete(req.params.id);
-    return res.status(200).json("Comment has been deleted");
+    return res.status(200).json('Comment has been deleted');
   }
 
   const user = await User.findOne({ clerkUserId });
@@ -53,8 +55,8 @@ export const deleteComment = async (req, res, next) => {
   });
 
   if (!deleteComment) {
-    res.status(403).json("you can delete only your comment!");
+    res.status(403).json('you can delete only your comment!');
   }
 
-  res.status(200).json("Comment Deleted");
+  res.status(200).json('Comment Deleted');
 };

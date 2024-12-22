@@ -1,12 +1,14 @@
-import Comment from "./Comment";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuth, useUser } from "@clerk/clerk-react";
-import { toast } from "react-toastify";
-import axios from "axios";
+import Comment from './Comment';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuth, useUser } from '@clerk/clerk-react';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 // Function to fetch comments by ID
 const fetchComments = async (postId) => {
-  const response = await axios.get(`${import.meta.env.VITE_API_URL}/comments/${postId}`);
+  const response = await axios.get(
+    `${import.meta.env.VITE_API_URL}/comments/${postId}`
+  );
   return response.data; // Correctly returning data from axios response
 };
 
@@ -18,7 +20,7 @@ const Comments = ({ postId }) => {
 
   // Use useQuery to fetch the comments by postId
   const { data, error, isLoading, isError, isPending } = useQuery({
-    queryKey: ["comments", postId],
+    queryKey: ['comments', postId],
     queryFn: () => fetchComments(postId),
     enabled: !!postId, // Ensure the query is enabled only when postId exists
   });
@@ -26,20 +28,24 @@ const Comments = ({ postId }) => {
   // Post comment mutation
   const mutation = useMutation({
     mutationFn: async (newComment) => {
-      console.log("under mutation fn", newComment);
+      console.log('under mutation fn', newComment);
 
       const token = await getToken();
       console.log(token);
 
-      return axios.post(`${import.meta.env.VITE_API_URL}/comments/${postId}`, newComment, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      return axios.post(
+        `${import.meta.env.VITE_API_URL}/comments/${postId}`,
+        newComment,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     },
     onSuccess: (res) => {
-      console.log("success", res);
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      console.log('success', res);
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
     },
     onError: (error) => {
       toast.error(error.response.data);
@@ -51,7 +57,7 @@ const Comments = ({ postId }) => {
     const formData = new FormData(e.target);
 
     const data = {
-      desc: formData.get("desc"),
+      desc: formData.get('desc'),
     };
 
     console.log(data); // Log the form data
@@ -79,7 +85,10 @@ const Comments = ({ postId }) => {
                 className='w-full rounded-lg py-2 px-4 mt-4'
                 placeholder='Write a comment...'
               />
-              <button type='submit' className='bg-blue-800 text-white py-2 px-4 rounded-lg'>
+              <button
+                type='submit'
+                className='bg-blue-800 text-white py-2 px-4 rounded-lg'
+              >
                 Send
               </button>
             </form>
@@ -90,9 +99,9 @@ const Comments = ({ postId }) => {
           <Comment key={comment._id} comment={comment} />
         ))} */}
         {isPending ? (
-          "Loading..."
+          'Loading...'
         ) : error ? (
-          "Error loading comments!"
+          'Error loading comments!'
         ) : (
           <>
             {mutation.isPending && (
@@ -109,7 +118,9 @@ const Comments = ({ postId }) => {
             )}
 
             {data.map((comment) => {
-              return <Comment key={comment._id} comment={comment} />;
+              return (
+                <Comment key={comment._id} comment={comment} postId={postId} />
+              );
             })}
           </>
         )}

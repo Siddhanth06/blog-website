@@ -1,9 +1,8 @@
-import { useAuth, useUser } from "@clerk/clerk-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useAuth, useUser } from '@clerk/clerk-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const PostMenuActions = ({ post }) => {
   const navigate = useNavigate();
@@ -16,7 +15,7 @@ const PostMenuActions = ({ post }) => {
     error,
     data: savedPosts,
   } = useQuery({
-    queryKey: ["savedPosts"],
+    queryKey: ['savedPosts'],
     queryFn: async () => {
       const token = await getToken();
 
@@ -28,17 +27,12 @@ const PostMenuActions = ({ post }) => {
     },
   });
 
-  console.log(user?.publicMetadata.role);
-
-  // const isAdmin = user?.publicMetadata?.role === "admin" || false;
-
   const isSaved = savedPosts?.data?.some((p) => p === post._id) || false;
-  const isAdmin = user?.publicMetadata?.role == "admin" || false;
+  const isAdmin = user?.publicMetadata?.role == 'admin' || false;
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
       const token = await getToken();
-      // console.log(token);
 
       return axios.delete(`${import.meta.env.VITE_API_URL}/posts/${post._id}`, {
         headers: {
@@ -47,8 +41,8 @@ const PostMenuActions = ({ post }) => {
       });
     },
     onSuccess: () => {
-      toast.success("Post deleted successfully !!");
-      navigate("/");
+      toast.success('Post deleted successfully !!');
+      navigate('/');
     },
     onError: (error) => {
       toast.error(error.response.data);
@@ -58,7 +52,7 @@ const PostMenuActions = ({ post }) => {
   const saveMutation = useMutation({
     mutationFn: async () => {
       const token = await getToken();
-      console.log("Token", token);
+      console.log('Token', token);
 
       return axios.patch(
         `${import.meta.env.VITE_API_URL}/users/save`,
@@ -71,7 +65,7 @@ const PostMenuActions = ({ post }) => {
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["savedPosts"] });
+      queryClient.invalidateQueries({ queryKey: ['savedPosts'] });
     },
     onError: (error) => {
       toast.error(error.response.data);
@@ -84,7 +78,7 @@ const PostMenuActions = ({ post }) => {
 
   const handleSave = () => {
     if (!user) {
-      navigate("/login");
+      navigate('/login');
     }
 
     saveMutation.mutate();
@@ -93,22 +87,35 @@ const PostMenuActions = ({ post }) => {
   return (
     <div className='flex flex-col gap-4'>
       <h1 className='font-medium'>Actions</h1>
-      <div className='flex items-center gap-4 cursor-pointer' onClick={handleSave}>
-        <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' width='20px' height='20px'>
+      <div
+        className='flex items-center gap-4 cursor-pointer'
+        onClick={handleSave}
+      >
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 0 48 48'
+          width='20px'
+          height='20px'
+        >
           <path
             d='M12 4C10.3 4 9 5.3 9 7v34l15-9 15 9V7c0-1.7-1.3-3-3-3H12z'
             stroke='black'
             strokeWidth='2'
-            fill={isSaved ? "black" : "none"}
+            fill={isSaved ? 'black' : 'none'}
           />
         </svg>
         <div className='flex gap-4 items-center'>
           <span>Save this Post</span>
-          {saveMutation.isPending && <span className='text-xs'>(in progress)</span>}
+          {saveMutation.isPending && (
+            <span className='text-xs'>(in progress)</span>
+          )}
         </div>
       </div>
       {user && (post.user.username === user.username || isAdmin) && (
-        <div className='flex items-center gap-4 cursor-pointer' onClick={handleDelete}>
+        <div
+          className='flex items-center gap-4 cursor-pointer'
+          onClick={handleDelete}
+        >
           <svg
             xmlns='http://www.w3.org/2000/svg'
             viewBox='0 0 50 50'

@@ -1,10 +1,10 @@
-import User from "../models/user.model.js";
+import User from '../models/user.model.js';
 
 export const getUserSavedPost = async (req, res) => {
   const clerkUserId = req.auth.userId;
 
   if (!clerkUserId) {
-    return res.status(401).json("Not Authenticated");
+    return res.status(401).json('Not Authenticated');
   }
 
   const user = await User.findOne({ clerkUserId });
@@ -13,23 +13,16 @@ export const getUserSavedPost = async (req, res) => {
 };
 
 export const savePost = async (req, res) => {
-  console.log("inside savePost");
-
   const clerkUserId = req.auth.userId;
   const postId = req.body.postId;
-  console.log("savePost", postId);
-
-  console.log("clerkid postid", clerkUserId, postId);
 
   if (!clerkUserId) {
-    return res.status(401).json("Not Authenticated");
+    return res.status(401).json('Not Authenticated');
   }
 
   const user = await User.findOne({ clerkUserId });
-  console.log("user", user);
 
   const isSaved = user.savedPosts.some((p) => p === postId);
-  console.log("isSaved", isSaved);
 
   if (!isSaved) {
     await User.findByIdAndUpdate(user._id, {
@@ -41,5 +34,5 @@ export const savePost = async (req, res) => {
     });
   }
 
-  res.status(200).json(isSaved ? "Post unsaved" : "Post saved");
+  res.status(200).json(isSaved ? 'Post unsaved' : 'Post saved');
 };

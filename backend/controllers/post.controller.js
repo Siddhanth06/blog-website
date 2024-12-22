@@ -1,6 +1,6 @@
-import Post from "../models/post.model.js";
-import User from "../models/user.model.js";
-import ImageKit from "imagekit";
+import Post from '../models/post.model.js';
+import User from '../models/user.model.js';
+import ImageKit from 'imagekit';
 
 const imagekit = new ImageKit({
   urlEndpoint: process.env.IK_URL_ENDPOINT,
@@ -12,11 +12,10 @@ const imagekit = new ImageKit({
 export const getPosts = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
-  console.log(req.query.page);
 
   try {
     const posts = await Post.find()
-      .populate("user", "username")
+      .populate('user', 'username')
       .limit(limit)
       .skip((page - 1) * limit);
 
@@ -31,10 +30,10 @@ export const getPosts = async (req, res, next) => {
 //Get a single post
 export const getPost = async (req, res, next) => {
   try {
-    const post = await Post.findOne({ slug: req.params.slug }).populate("user", [
-      "username",
-      "img",
-    ]);
+    const post = await Post.findOne({ slug: req.params.slug }).populate(
+      'user',
+      ['username', 'img']
+    );
     res.status(200).json(post);
   } catch (error) {
     next(error);
@@ -45,19 +44,18 @@ export const getPost = async (req, res, next) => {
 export const createPost = async (req, res, next) => {
   try {
     const clerkUserId = req.auth.userId;
-    console.log(req.auth.userId);
 
     if (!clerkUserId) {
-      res.status(401).json("not authenticated");
+      res.status(401).json('not authenticated');
     }
 
     const user = await User.findOne({ clerkUserId });
 
     if (!user) {
-      res.status(404).json("user not found");
+      res.status(404).json('user not found');
     }
 
-    let slug = req.body.title.replace(/\s+/g, "-").toLowerCase();
+    let slug = req.body.title.replace(/\s+/g, '-').toLowerCase();
 
     let existingPost = await Post.findOne({ slug });
 
@@ -83,14 +81,14 @@ export const deletePost = async (req, res, next) => {
     const clerkUserId = req.auth.userId;
 
     if (!clerkUserId) {
-      res.status(401).json("not authenticated");
+      res.status(401).json('not authenticated');
     }
 
-    const role = req.auth.sessionClaims?.metadata?.role || "user";
+    const role = req.auth.sessionClaims?.metadata?.role || 'user';
 
-    if (role === "admin") {
+    if (role === 'admin') {
       await Post.findByIdAndDelete(req.params.id);
-      return res.status(200).json("Post has been deleted");
+      return res.status(200).json('Post has been deleted');
     }
 
     const user = await User.findOne({ clerkUserId });
@@ -102,13 +100,11 @@ export const deletePost = async (req, res, next) => {
     });
 
     if (!deletedPost) {
-      return res.status(404).json({ message: "Post not found" });
+      return res.status(404).json({ message: 'Post not found' });
     }
 
-    res.status(200).json({ message: "Post deleted successfully", deletedPost });
+    res.status(200).json({ message: 'Post deleted successfully', deletedPost });
   } catch (error) {
-    // console.log("inside delete post");
-
     next(error);
   }
 };
