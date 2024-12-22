@@ -109,6 +109,44 @@ export const deletePost = async (req, res, next) => {
   }
 };
 
+//Feature post
+export const featurePost = async (req, res, next) => {
+  try {
+    const clerkUserId = req.auth.userId;
+    const postId = req.body.postId;
+
+    if (!clerkUserId) {
+      res.status(401).json('not authenticated');
+    }
+
+    const role = req.auth.sessionClaims?.metadata?.role || 'user';
+
+    if (role !== 'admin') {
+      return res.status(403).json('Cannot feature post');
+    }
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json('post not found');
+    }
+
+    const isFeatured = post.isFeatured;
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      {
+        isFeatured: !isFeatured,
+      },
+      { new: true }
+    );
+
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const uploadAuth = async (req, res) => {
   var result = imagekit.getAuthenticationParameters();
   res.send(result);

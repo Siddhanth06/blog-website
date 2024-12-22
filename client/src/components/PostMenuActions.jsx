@@ -72,8 +72,34 @@ const PostMenuActions = ({ post }) => {
     },
   });
 
+  const featureMutation = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+
+      return axios.patch(
+        `${import.meta.env.VITE_API_URL}/posts/feature`,
+        { postId: post._id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['post', post.slug] });
+    },
+    onError: (error) => {
+      toast.error(error.response.data);
+    },
+  });
+
   const handleDelete = () => {
     deleteMutation.mutate();
+  };
+
+  const handleFeature = () => {
+    featureMutation.mutate();
   };
 
   const handleSave = () => {
@@ -87,6 +113,7 @@ const PostMenuActions = ({ post }) => {
   return (
     <div className='flex flex-col gap-4'>
       <h1 className='font-medium'>Actions</h1>
+      {/* Save post */}
       <div
         className='flex items-center gap-4 cursor-pointer'
         onClick={handleSave}
@@ -111,6 +138,28 @@ const PostMenuActions = ({ post }) => {
           )}
         </div>
       </div>
+
+      {/* Feature post */}
+      {isAdmin && (
+        <div className='flex items-center gap-4' onClick={handleFeature}>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 48 48'
+            width='20px'
+            height='20px'
+          >
+            <path
+              d='M24 2L29.39 16.26L44 18.18L33 29.24L35.82 44L24 37L12.18 44L15 29.24L4 18.18L18.61 16.26L24 2Z'
+              stroke='black'
+              strokeWidth='2'
+              fill={post.isFeatured ? 'black' : 'none'}
+            />
+          </svg>
+          <span>Feature this post</span>
+        </div>
+      )}
+
+      {/* Delete post */}
       {user && (post.user.username === user.username || isAdmin) && (
         <div
           className='flex items-center gap-4 cursor-pointer'
