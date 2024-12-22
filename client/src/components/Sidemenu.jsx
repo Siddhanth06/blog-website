@@ -1,8 +1,19 @@
-import React from "react";
-import Search from "../components/Search";
-import { Link } from "react-router-dom";
+import React from 'react';
+import Search from '../components/Search';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const Sidemenu = () => {
+  const [searchParama, setSearchParams] = useSearchParams();
+  function handleFilterChange(e) {
+    console.log(e.target.value);
+
+    if (searchParama.get('sort') !== e.target.value) {
+      setSearchParams({
+        ...Object.fromEntries(searchParama.entries()),
+        sort: e.target.value,
+      });
+    }
+  }
   return (
     <div className='flex flex-col gap-8'>
       <div className='flex flex-col gap-4'>
@@ -14,6 +25,7 @@ const Sidemenu = () => {
         <div>
           <label htmlFor='' className='flex gap-2 items-center'>
             <input
+              onChange={handleFilterChange}
               type='radio'
               name='sort'
               value='newest'
@@ -24,6 +36,7 @@ const Sidemenu = () => {
           </label>
           <label htmlFor='' className='flex gap-2 items-center'>
             <input
+              onChange={handleFilterChange}
               type='radio'
               name='sort'
               value='popular'
@@ -34,6 +47,7 @@ const Sidemenu = () => {
           </label>
           <label htmlFor='' className='flex gap-2 items-center'>
             <input
+              onChange={handleFilterChange}
               type='radio'
               name='sort'
               value='trending'
@@ -44,13 +58,14 @@ const Sidemenu = () => {
           </label>
           <label htmlFor='' className='flex gap-2 items-center'>
             <input
+              onChange={handleFilterChange}
               type='radio'
               name='sort'
-              value='object'
+              value='oldest'
               id=''
               className='appearance-none w-4 h-4 border-[1.5px] bg-white rounded-sm checked:bg-blue-800'
             />
-            Object
+            oldest
           </label>
         </div>
       </div>
