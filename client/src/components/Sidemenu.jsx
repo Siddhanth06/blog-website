@@ -14,6 +14,15 @@ const Sidemenu = () => {
       });
     }
   }
+
+  function handleCategoryChange(category) {
+    if (searchParama.get('cat') !== category) {
+      setSearchParams({
+        ...Object.fromEntries(searchParama.entries()),
+        cat: category,
+      });
+    }
+  }
   return (
     <div className='flex flex-col gap-8'>
       <div className='flex flex-col gap-4'>
@@ -72,24 +81,44 @@ const Sidemenu = () => {
       <div className='flex flex-col gap-4'>
         <h1>Categories</h1>
         <div className='flex flex-col'>
-          <Link to='/' className='underline'>
+          <span
+            className='underline'
+            onClick={() => handleCategoryChange('general')}
+          >
             All
-          </Link>
-          <Link to='/web-design' className='underline'>
+          </span>
+          <span
+            className='underline'
+            onClick={() => handleCategoryChange('web-design')}
+          >
             Web Design
-          </Link>
-          <Link to='/development' className='underline'>
+          </span>
+          <span
+            className='underline'
+            onClick={() => {
+              handleCategoryChange('development');
+            }}
+          >
             Development
-          </Link>
-          <Link to='/databases' className='underline'>
+          </span>
+          <span
+            className='underline'
+            onClick={() => handleCategoryChange('databases')}
+          >
             Databases
-          </Link>
-          <Link to='/search-engines' className='underline'>
+          </span>
+          <span
+            className='underline'
+            onClick={() => handleCategoryChange('search-engines')}
+          >
             Search Engines
-          </Link>
-          <Link to='/marketing' className='underline'>
+          </span>
+          <span
+            className='underline'
+            onClick={() => handleCategoryChange('marketing')}
+          >
             Marketing
-          </Link>
+          </span>
         </div>
       </div>
     </div>

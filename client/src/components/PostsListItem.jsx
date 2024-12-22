@@ -9,7 +9,7 @@ const PostsListItem = ({ post }) => {
       {/* image */}
       {post.img && (
         <Link
-          to={post.slug}
+          to={`/${post.slug}`}
           className='rounded-xl overflow-hidden md:hidden lg:flex lg:flex-[0.5] lg:flex-1'
         >
           <Image src={post.img} w='735' />
@@ -18,7 +18,7 @@ const PostsListItem = ({ post }) => {
       {/* </div> */}
       <div className='flex flex-col gap-4 lg:flex-1'>
         {/* title */}
-        <Link to={post.slug}>
+        <Link to={`/${post.slug}`}>
           <h1 className='font-bold text-2xl'>{post.title}</h1>
         </Link>
         {/* tags */}
@@ -41,7 +41,7 @@ const PostsListItem = ({ post }) => {
         <div>
           <a href='' className='underline'>
             <p>
-              <Link to={post.slug}>Read more</Link>
+              <Link to={`/${post.slug}`}>Read more</Link>
             </p>
           </a>
         </div>

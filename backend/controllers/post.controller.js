@@ -19,7 +19,7 @@ export const getPosts = async (req, res, next) => {
   const author = req.query.author;
   const searchQuery = req.query.search;
   const sortQuery = req.query.sort;
-  // const featured = req.query.featured;
+  const featured = req.query.featured;
 
   if (cat) {
     query.category = cat;
@@ -64,9 +64,11 @@ export const getPosts = async (req, res, next) => {
     }
   }
 
-  try {
-    console.log(query);
+  if (featured) {
+    query.isFeatured = true;
+  }
 
+  try {
     const posts = await Post.find(query)
       .populate('user', 'username')
       .sort(sortObj)
