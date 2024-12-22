@@ -61,7 +61,7 @@ const SinglePostPage = () => {
         </div>
         {/* image */}
         <div className='hidden lg:block lg:w-2/5'>
-          <Image src='/featured3.jpeg' className='rounded-3xl' />
+          <Image src={data.img} className='rounded-3xl' />
         </div>
       </div>
       {/* content */}
