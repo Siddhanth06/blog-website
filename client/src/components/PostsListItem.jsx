@@ -1,6 +1,6 @@
-import Image from "./Image";
-import { Link } from "react-router-dom";
-import { format } from "timeago.js";
+import Image from './Image';
+import { Link } from 'react-router-dom';
+import { format } from 'timeago.js';
 
 const PostsListItem = ({ post }) => {
   return (
@@ -24,7 +24,11 @@ const PostsListItem = ({ post }) => {
         {/* tags */}
         <div className='flex gap-2 text-xs'>
           <span className='text-gray-500'>Written by</span>
-          <span className='text-blue-900'>{post.user.username}</span>
+          <span className='text-blue-900'>
+            <Link to={`/posts?author=${post.user.username}`}>
+              {post.user.username}
+            </Link>
+          </span>
           <span>on</span>
           <span className='text-blue-900'>{post.category}</span>
           <span className='text-gray-500'>{format(post.createdAt)}</span>

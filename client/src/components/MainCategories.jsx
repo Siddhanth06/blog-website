@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Search from './Search';
 
 const MainCategories = () => {
   return (
@@ -8,19 +9,20 @@ const MainCategories = () => {
         <Link to='/' className='bg-blue-800 text-white p-2 px-4 rounded-full'>
           All posts
         </Link>
-        <Link to='/'>Web Design</Link>
-        <Link to='/'>Development</Link>
-        <Link to='/'>Databases</Link>
-        <Link to='/'>Search Engines</Link>
-        <Link to='/'>Marketing</Link>
+        <Link to={`/posts?cat=web-design`}>Web Design</Link>
+        <Link to={`/posts?cat=development`}>Development</Link>
+        <Link to={`/posts?cat=databases`}>Databases</Link>
+        <Link to={`/posts?cat=search-engines`}>Search Engines</Link>
+        <Link to={`/posts?cat=marketing`}>Marketing</Link>
       </div>
       {/* search */}
       <div>
-        <input
+        {/* <input
           type='text'
           placeholder='🔍 Search'
           className='bg-gray-100 py-1 px-4 rounded-full'
-        />
+        /> */}
+        <Search />
       </div>
     </div>
   );

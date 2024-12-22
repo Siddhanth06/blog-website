@@ -97,12 +97,12 @@ const Write = () => {
         <div className='flex gap-2 items-center'>
           <label htmlFor=''>Choose a category:</label>
           <select name='category' id='' className='p-1 rounded-lg'>
-            <option value='General'>General</option>
-            <option value='Development'>Development</option>
-            <option value='Web Design'>Web Design</option>
-            <option value='Search Engines'>Search Engines</option>
-            <option value='Databases'>Databases</option>
-            <option value='Marketing'>Marketing</option>
+            <option value='general'>General</option>
+            <option value='development'>Development</option>
+            <option value='web-design'>Web Design</option>
+            <option value='search-engines'>Search Engines</option>
+            <option value='databases'>Databases</option>
+            <option value='marketing'>Marketing</option>
           </select>
         </div>
         <textarea

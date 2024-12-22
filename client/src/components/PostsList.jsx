@@ -1,29 +1,52 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import PostsListItem from "./PostsListItem";
-import axios from "axios";
-import InfiniteScroll from "react-infinite-scroll-component";
+import { useInfiniteQuery } from '@tanstack/react-query';
+import PostsListItem from './PostsListItem';
+import axios from 'axios';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { useSearchParams } from 'react-router-dom';
 
+// const fetchPosts = async (pageParam, searchParams) => {
+//   const searchParamsObj = Object.fromEntries([...searchParams]);
+//   console.log(searchParamsObj);
+
+//   const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
+//     params: { page: pageParam, limit: 2, ...searchParamsObj },
+//   });
+//   return res.data;
+// };
+
+const fetchPosts = async (pageParam, searchParams) => {
+  const searchParamsObj = Object.fromEntries([...searchParams]);
+
+  console.log(searchParamsObj);
+
+  const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
+    params: { page: pageParam, limit: 2, ...searchParamsObj },
+  });
+  return res.data;
+};
 const PostsList = () => {
-  const fetchPosts = async (pageParam) => {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
-      params: { page: pageParam, limit: 2 },
-    });
-    return res.data;
-  };
-
-  const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status } =
-    useInfiniteQuery({
-      queryKey: ["posts"],
-      queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam),
-      initialPageParam: 1,
-      getNextPageParam: (lastPage, pages) => (lastPage.hasMore ? pages.length + 1 : undefined),
-    });
+  const [searchParams, setSearchParams] = useSearchParams();
+  const {
+    data,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ['posts', searchParams.toString()],
+    queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam, searchParams),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.hasMore ? pages.length + 1 : undefined,
+  });
 
   const allPosts = data?.pages?.flatMap((page) => page.posts) || [];
 
-  if (isFetching) return "Loading...";
+  if (isFetching) return 'Loading...';
 
-  if (status === "error") return "Something went wrong";
+  if (status === 'error') return 'Something went wrong';
   return (
     <>
       <InfiniteScroll
